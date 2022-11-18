@@ -1,0 +1,29 @@
+"Tells the service this field/object has access authorized by an API key."
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
+
+type User @aws_api_key {
+    id: String!,
+    name: String!,
+    email: String!,
+}
+
+input UserInput {
+    id: String!
+    name: String!
+    email: String!
+}
+
+type UserDeleted {
+    deleted: Boolean!
+}
+
+type Query {
+    list: [User] @aws_api_key
+    getById(id: String!): User @aws_api_key
+}
+
+type Mutation {
+    createUser(user: UserInput!): User! @aws_api_key
+    updateUser(user: UserInput!): User! @aws_api_key
+    deleteUser(id: String!): UserDeleted! @aws_api_key
+}
