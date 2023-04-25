@@ -1,42 +1,18 @@
+import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { UserForm } from '../UserForm/UserForm';
-import { PartialBy } from '../../../utils/partialBy';
 import { User } from '../user-model';
-import { gql, useMutation, useQuery } from '@apollo/client';
 import { Whoops } from '../../../ui/Whoops/Whoops';
 import { Loading } from '../../../ui/Loading/Loading';
-
-const GET_USER_BY_ID = gql`
-    query GetUser ($id: String!) {
-        getById(id: $id) {
-            id,
-            name,
-            email,
-        }
-    }
-`;
-
-const UPDATE_USER = gql`
-    mutation UpdateUser ($user: UserInput!) {
-        updateUser(user: $user) {
-            id,
-            name,
-            email,
-        }
-    }
-`;
+import { useGetUserById, useUpdateUser } from '../../../api/queries/users';
 
 export function UserEdit() {
   const {id} = useParams();
-  const {data, loading, error} = useQuery(GET_USER_BY_ID, {
-    variables: {
-      id,
-    }
-  });
-  const [updateUser, {data: updatedUser, loading: updateLoading, error: updateError}] = useMutation(UPDATE_USER);
+  const {data, loading, error} = useGetUserById(id!, true);
   const navigate = useNavigate();
+  const [updateUser, {loading: updateLoading, error: updateError}] = useUpdateUser(true);
 
-  const handleSubmit = async (user: PartialBy<User, 'id'>) => {
+  const handleSubmit = async (user: Omit<User, "id"> & {id?: string}) => {
     await updateUser({
       variables: {
         user: {
@@ -45,7 +21,7 @@ export function UserEdit() {
           name: user.name,
         },
       },
-      onCompleted: () => {
+      onCompleted:  () => {
         navigate('/');
       }
     })

@@ -1,41 +1,19 @@
-import { UserForm } from '../UserForm/UserForm';
-import { User } from '../user-model';
-import { PartialBy } from '../../../utils/partialBy';
-import { ApolloCache, gql, useMutation } from '@apollo/client';
-import {v4 as uuid} from 'uuid';
-import { Loading } from '../../../ui/Loading/Loading';
-import { useNavigate } from 'react-router-dom';
-import { Whoops } from '../../../ui/Whoops/Whoops';
-
-const CREATE_USER = gql`
-    mutation createUser($user: UserInput!) {
-        createUser(user: $user) {
-            email
-            id
-            name
-        }
-    }
-`;
+import React from "react";
+import { UserForm } from "../UserForm/UserForm";
+import { User } from "../user-model";
+import { v4 as uuid } from "uuid";
+import { Loading } from "../../../ui/Loading/Loading";
+import { useNavigate } from "react-router-dom";
+import { Whoops } from "../../../ui/Whoops/Whoops";
+import { useCreateUser } from "../../../api/queries/users";
 
 export function UserCreate() {
   const navigate = useNavigate();
-  const [createUser, {data, loading, error}] = useMutation(CREATE_USER, {
-    update: (cache: ApolloCache<any>, result) => {
-      cache.modify({
-        fields: {
-          list(existing, { toReference }) {
-            return [...existing, toReference(result.data.createUser)]
-          }
-        }
-      })
-    },
-    onCompleted: (data) => {
-      navigate('/');
-    }
-  });
+  const [createUser, {loading, error }] = useCreateUser(() => {
+    navigate("/");
+  }, true);
 
-
-  const handleSubmit = async (user: PartialBy<User, 'id'>) => {
+  const handleSubmit = async (user: Omit<User, "id">) => {
     await createUser({
       variables: {
         user: {
@@ -45,15 +23,15 @@ export function UserCreate() {
         }
       }
     });
-  }
+  };
 
   if (loading) {
-    return <Loading />
+    return <Loading />;
   }
 
   if (error) {
-    return <Whoops />
+    return <Whoops />;
   }
 
-  return <UserForm title="Create user" onSubmit={handleSubmit}/>
+  return <UserForm title="Create user" onSubmit={handleSubmit} />;
 }

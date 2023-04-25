@@ -16,7 +16,7 @@ export interface ChildRoute {
   component: JSX.Element;
 }
 
-export interface Route {
+export interface RouteObject {
   link: string;
   component: JSX.Element;
   children?: ChildRoute[];
@@ -41,7 +41,7 @@ function App() {
     cache: new InMemoryCache(),
   });
 
-  const routes: Route[] = [
+  const routes: RouteObject[] = [
     {
       link: '',
       component: <Users/>,

@@ -5,7 +5,7 @@
 
 ### CDK bootstrap and destroy
 * `cd backend`
-* `npx cdk bootsrtap`
+* `npx cdk bootstrap`
 * `npm build`
 * `npx cdk deploy --outputs-file='../frontend/src/cdk-exports.json'`
 
