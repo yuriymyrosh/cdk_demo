@@ -1,21 +1,20 @@
-import { RemovalPolicy, Stack, aws_dynamodb } from "aws-cdk-lib";
-import { Buildable } from "./construct";
+import { RemovalPolicy, Stack } from "aws-cdk-lib";
+import { ConstructBuilder } from "./construct-builder";
 import { AttributeType, Table } from "aws-cdk-lib/aws-dynamodb";
 
-export class DatabaseTable implements Buildable {
+export class DatabaseTable implements ConstructBuilder {
+  private tableName = "UsersTable";
 
-  private tableName = 'UsersTable';
-  
   constructor(private readonly stack: Stack) {}
 
   build(): Table {
-      return new aws_dynamodb.Table(this.stack, this.tableName, {
-        tableName: this.tableName,
-        partitionKey: {
-          name: 'id',
-          type: AttributeType.STRING,
-        },
-        removalPolicy: RemovalPolicy.DESTROY,
-      })
+    return new Table(this.stack, this.tableName, {
+      tableName: this.tableName,
+      partitionKey: {
+        name: "id",
+        type: AttributeType.STRING
+      },
+      removalPolicy: RemovalPolicy.DESTROY
+    });
   }
 }

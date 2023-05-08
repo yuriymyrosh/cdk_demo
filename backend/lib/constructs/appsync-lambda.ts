@@ -1,10 +1,9 @@
 import { Duration, Stack } from "aws-cdk-lib";
-import { Buildable } from "./construct";
-import { Construct } from "constructs";
+import { ConstructBuilder } from "./construct-builder";
 import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
 import { GraphqlApi } from "aws-cdk-lib/aws-appsync";
 
-export class AppsyncLambda implements Buildable {
+export class AppsyncLambda implements ConstructBuilder {
   constructor(
     private readonly stack: Stack,
     private readonly tableName: string,

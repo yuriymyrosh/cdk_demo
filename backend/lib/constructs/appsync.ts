@@ -1,8 +1,8 @@
 import { CfnOutput, Stack } from "aws-cdk-lib";
-import { Buildable } from "./construct";
+import { ConstructBuilder } from "./construct-builder";
 import { GraphqlApi, AuthorizationType, SchemaFile } from "aws-cdk-lib/aws-appsync";
 
-export class AppSync implements Buildable {
+export class AppSync implements ConstructBuilder {
   private readonly id = 'GraphQl'
 
   constructor(private readonly stack: Stack) {}
